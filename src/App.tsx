@@ -1,25 +1,59 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import Styled from 'styled-components'
+import { TrackControl, MasterControl } from '@components'
+import AudioManager from './audio';
+
+const Wrapper = Styled.div`
+  background-color: #CCCCDD;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`
+
+const Body = Styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: #EEEEFF;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+`
+
+const TitleHeading = Styled.div`
+  text-align: center;
+`
+
+const TrackControlList = Styled.div`
+  background-color: #EEEEFF;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 8px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+`
+
+const am = new AudioManager(new window.AudioContext())
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Wrapper>
+      <Body>
+        <TitleHeading><h1>AOEC Browser Demo</h1></TitleHeading>
+        <MasterControl
+          audioManager={am}
+        />
+        <TrackControlList>
+          <TrackControl targetID={0} audioManager={am} />
+          <TrackControl targetID={1} audioManager={am} />
+          <TrackControl targetID={2} audioManager={am} />
+        </TrackControlList>
+      </Body>
+    </Wrapper>
   );
 }
 

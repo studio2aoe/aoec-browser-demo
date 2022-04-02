@@ -1,7 +1,19 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Commit Message
+/.gitcommit
+
+# built binaries & bundles original
+/crate/target
+/processor/dist
+
+# built binaries & bundles in public
+/public/static/js
+/public/static/wasm
+
 # dependencies
 /node_modules
+/processor/node_modules
 /.pnp
 .pnp.js
 
