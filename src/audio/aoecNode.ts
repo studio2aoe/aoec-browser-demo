@@ -1,7 +1,6 @@
-
 const postmsg = (
-  port: MessagePort, 
-  name: string, 
+  port: MessagePort,
+  name: string,
   arg: Array<number | boolean>
 ) =>
   port.postMessage({ type: 'wasmfunc', data: { name, arg } })
@@ -34,35 +33,36 @@ export class AoecControl {
 
 export class AoecNode extends AudioWorkletNode {
   private control: Array<AoecControl>
-  constructor (actx: AudioContext) {
+  private wasmReady: boolean
+  constructor (actx: AudioContext, wasmUrl: string) {
     super(actx, 'aoecProcessor', {
       numberOfInputs: 0,
       numberOfOutputs: 1,
       outputChannelCount: [2]
     })
 
+    this.wasmReady = false
     this.control = []
     this.control[0] = new AoecControl(this, 0)
     this.control[1] = new AoecControl(this, 1)
     this.control[2] = new AoecControl(this, 2)
 
-    fetch('./static/wasm/soundchip.wasm')
+    fetch(wasmUrl)
       .then(r => r.arrayBuffer())
       .then(r => this.port.postMessage({ type: 'loadWasm', data: r }))
 
     this.port.onmessage = async e => {
-      const msg = e.data
-      if (msg.type === 'wasmReady') {
-        console.log('from aoecProcessor: wasm is ready')
-        this.resetControl()
-      }
+      e.data.type === 'wasmReady' && this.setReady()
     }
   }
 
-  getControl (id: number) {
-    return this.control[id]
+  private setReady () {
+    console.log('from aoecProcessor: wasm is ready')
+    this.wasmReady = true
   }
 
-  resetControl () {
-  }
+  getControl = (id: number) => this.control[id]
+
+  isReady = () => this.wasmReady
+
 }

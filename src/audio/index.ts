@@ -1,23 +1,23 @@
 import { AoecNode, AoecControl } from './aoecNode'
 
+const processorUrl = './static/js/processor.0.0.1.js'
+const wasmUrl = './static/wasm/soundchip.wasm'
+
 class AudioManager {
   private actx: AudioContext
-  private node!: AoecNode
   private master: GainNode
-  private ready: boolean
+  private node!: AoecNode
 
   constructor (actx: AudioContext) {
-    this.ready = false
     this.actx = actx
     this.master = new GainNode(this.actx)
 
-    this.actx.audioWorklet.addModule(
-      './static/js/processor.0.0.1.js'
-    ).then(() => {
-      this.node = new AoecNode(this.actx)
+    this.actx.suspend()
+    this.actx.audioWorklet.addModule(processorUrl)
+    .then(() => {
+      this.node = new AoecNode(this.actx, wasmUrl)
       this.node.connect(this.master)
       this.master.connect(this.actx.destination)
-      this.ready = true
     }).catch(err => {
       console.error(`Failed to init AudioManager with: ${err}`)
     })
@@ -25,7 +25,7 @@ class AudioManager {
   suspend = () => this.actx.suspend()
   resume = () => this.actx.resume()
 
-  isReady = () => this.ready
+  isReady = () => this.node?.isReady()
 
   getAoecControl = (id: number): AoecControl => {
     return this.node.getControl(id)

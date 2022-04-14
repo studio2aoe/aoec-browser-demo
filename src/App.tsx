@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import Styled from 'styled-components'
 import { TrackControl, MasterControl } from '@components'
 import AudioManager from './audio';
