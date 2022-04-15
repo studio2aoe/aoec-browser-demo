@@ -1,7 +1,7 @@
 import { AoecNode, AoecControl } from './aoecNode'
 
-const processorUrl = './static/js/processor.0.0.1.js'
-const wasmUrl = './static/wasm/soundchip.wasm'
+const processorUrl = './static/aoecjs/aoecjs.0.0.1.js'
+const wasmUrl = './static/aoecjs/aoecjs.0.0.1.wasm'
 
 class AudioManager {
   private actx: AudioContext

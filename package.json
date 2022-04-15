@@ -23,8 +23,6 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "build-crate": "crate/build.sh",
-    "build-processor": "processor/build.sh",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test"

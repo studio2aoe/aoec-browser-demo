@@ -3,17 +3,11 @@
 # Commit Message
 /.gitcommit
 
-# built binaries & bundles original
-/crate/target
-/processor/dist
-
 # built binaries & bundles in public
-/public/static/js
-/public/static/wasm
+/public/static/aoecjs
 
 # dependencies
 /node_modules
-/processor/node_modules
 /.pnp
 .pnp.js
 

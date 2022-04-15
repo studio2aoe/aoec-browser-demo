@@ -1,11 +1,10 @@
-# aoec-browser-demo
+# aoec-browser-demo (Work in Progress)
 
 [Create React App](https://create-react-app.dev/) based Web Browser Demo of [aoec](https://github.com/studio2aoe/aoec)
 
 ## Required
 - Build
   - Node.js (tested on `node v16.14.2` & `npm 8.6.0`)
-  - Rust (tested on `rustc 1.59.0` & `cargo 1.59.0`)
 
 - Browser features
   - [AudioWorklet](https://caniuse.com/?search=AudioWorklet)
@@ -17,22 +16,25 @@
 ## Play the demo
 
 ```bash
-git clone https://github.com/studio2aoe/aoec-browser-demo
-git clone https://github.com/studio2aoe/aoec # aoec is work in progress, so not registered to npm yet
+git clone https://github.com/studio2aoe/aoecjs # Dynamic dependencies
+git clone https://github.com/studio2aoe/aoec-browser-demo # The demo
 
-cd aoec-browser-demo
-npm install # Install dependency for the App
+# Build aoecjs & install on the demo
+cd aoecjs
+npm install
+npm run build
+mkdir -p ../aoec-browser-demo/public/static/aoecjs
+cp dist/* ../aoec-browser-demo/public/static/aoecjs
 
-cd processor
-npm install # Install dependency for AudioWorkletProcessor
+# Build and start the demo
+cd ../aoec-browser-demo
+npm install
+npm run start
 
-cd ../
-npm run build-crate     # Build the WASM Crate
-npm run build-processor # Build the AudioWorkletProcessor
-npm run start           # Start the dev-server
 ```
 
 and browse `http://localhost:3000`
 
-※ WASM Crate (`./crate`) and AudioWorkletProcessor (`./processor`) are not included in the CRA package. 
-The modules should be built manually, and rebuilt when they are changed.
+※ The demo using aoecjs version 0.0.1, make sure the built aoecjs paths are
+  - `(repo)/public/static/aoecjs/aoecjs.0.0.1.wasm`
+  - `(repo)/public/static/aoecjs/aoecjs.0.0.1.js`
