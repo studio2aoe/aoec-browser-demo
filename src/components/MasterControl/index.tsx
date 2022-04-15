@@ -68,11 +68,9 @@ export function MasterControl({ audioManager }: Props) {
 
   // When states are changed, apply for audioManager
   useEffect(() => {
-    if (audioManager.isReady()) {
-      audioManager.setMasterVolume(stateVol)
-      stateActxState === 'running' && audioManager.resume()
-      stateActxState === 'suspended' && audioManager.suspend()
-    }
+    audioManager.setMasterVolume(stateVol)
+    stateActxState === 'running' && audioManager.resume()
+    stateActxState === 'suspended' && audioManager.suspend()
   })
 
   return (

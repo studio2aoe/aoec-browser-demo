@@ -36,7 +36,11 @@ const TrackControlList = Styled.div`
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
 `
 
-const am = new AudioManager(new window.AudioContext())
+const am = new AudioManager(new window.AudioContext({
+  sampleRate: 48000
+}))
+
+console.log(am.getSampleRate())
 
 function App() {
   return (
@@ -50,6 +54,11 @@ function App() {
           <TrackControl targetID={0} audioManager={am} />
           <TrackControl targetID={1} audioManager={am} />
           <TrackControl targetID={2} audioManager={am} />
+        </TrackControlList>
+        <TrackControlList>
+          <TrackControl targetID={3} audioManager={am} />
+          <TrackControl targetID={4} audioManager={am} />
+          <TrackControl targetID={5} audioManager={am} />
         </TrackControlList>
       </Body>
     </Wrapper>

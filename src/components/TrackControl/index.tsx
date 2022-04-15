@@ -10,7 +10,7 @@ import AudioManager from '@src/audio'
 const TUNINGS = TET12TuningGenerator()
 const NOTE_NAMES = [ 'C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B' ]
 const WT_NAMES = [ 'Muted', 'Pulse', 'Triangle', 'Sawtooth', 'Noise' ]
-const NOTE_INITS = [ 57, 64, 69 ] // A3, E3, A4
+const NOTE_INITS = [ 57, 64, 69, 72, 76, 81 ] // A3, E3, A4, C4, E4, A5
 
 // Types & Interfaces
 interface Props {
@@ -52,15 +52,13 @@ export function TrackControl({ audioManager, targetID }: Props) {
 
   // When states are changed, apply for audioManager
   useEffect(() => {
-    if (audioManager.isReady()) {
-      const aoecControl = audioManager.getAoecControl(targetID)
-      aoecControl.setFreq(calcFreq(stateNNum, statePBend))
-      aoecControl.setVol(0, stateVol)
-      aoecControl.setVol(1, stateVol)
-      aoecControl.setParam(0, stateWType)
-      aoecControl.setParam(1, stateWParam)
-      aoecControl.setMute(false)
-    }
+    const aoecControl = audioManager.getAoecControl(targetID)
+    aoecControl?.setFreq(calcFreq(stateNNum, statePBend))
+    aoecControl?.setVol(0, stateVol)
+    aoecControl?.setVol(1, stateVol)
+    aoecControl?.setParam(0, stateWType)
+    aoecControl?.setParam(1, stateWParam)
+    aoecControl?.setMute(false)
   })
 
   return (

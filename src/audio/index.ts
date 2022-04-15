@@ -3,20 +3,25 @@ import { AoecNode, AoecControl } from './aoecNode'
 const processorUrl = './static/aoecjs/aoecjs.0.0.1.js'
 const wasmUrl = './static/aoecjs/aoecjs.0.0.1.wasm'
 
+const TRACK_NUM = 6
+
 class AudioManager {
   private actx: AudioContext
   private master: GainNode
-  private node!: AoecNode
+  private node: AoecNode[]
 
   constructor (actx: AudioContext) {
     this.actx = actx
     this.master = new GainNode(this.actx)
+    this.node = []
 
     this.actx.suspend()
     this.actx.audioWorklet.addModule(processorUrl)
     .then(() => {
-      this.node = new AoecNode(this.actx, wasmUrl)
-      this.node.connect(this.master)
+      for (let i = 0; i < TRACK_NUM; i++) {
+        this.node[i] = new AoecNode(i, this.actx, wasmUrl)
+        this.node[i].connect(this.master)
+      }
       this.master.connect(this.actx.destination)
     }).catch(err => {
       console.error(`Failed to init AudioManager with: ${err}`)
@@ -25,10 +30,12 @@ class AudioManager {
   suspend = () => this.actx.suspend()
   resume = () => this.actx.resume()
 
-  isReady = () => this.node?.isReady()
+  isReady = (id: number) => this.node[id]?.isReady()
 
-  getAoecControl = (id: number): AoecControl => {
-    return this.node.getControl(id)
+  getSampleRate = () => this.actx.sampleRate
+
+  getAoecControl = (id: number): AoecControl | undefined => {
+    if (this.node[id]?.isReady()) return this.node[id].getControl()
   }
 
   getActxState = (): AudioContextState => this.actx.state

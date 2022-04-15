@@ -7,45 +7,41 @@ const postmsg = (
 
 export class AoecControl {
   private node: AudioWorkletNode
-  private id: number
-
-  constructor (node: AudioWorkletNode, id: number) {
+  constructor (node: AudioWorkletNode) {
     this.node = node
-    this.id = id
   }
 
   setFreq (freq: number) {
-    postmsg(this.node.port, 'set_freq', [this.id, freq])
+    postmsg(this.node.port, 'set_freq', [freq])
   }
 
   setVol (ch: number, vol: number) {
-    postmsg(this.node.port, 'set_vol', [this.id, ch, vol])
+    postmsg(this.node.port, 'set_vol', [ch, vol])
   }
 
   setMute (mute: boolean) {
-    postmsg(this.node.port, 'set_mute', [this.id, mute])
+    postmsg(this.node.port, 'set_mute', [mute])
   }
 
   setParam (key: number, val: number) {
-    postmsg(this.node.port, 'set_param', [this.id, key, val])
+    postmsg(this.node.port, 'set_param', [key, val])
   }
 }
 
 export class AoecNode extends AudioWorkletNode {
-  private control: Array<AoecControl>
+  private control: AoecControl
+  private id: number
   private wasmReady: boolean
-  constructor (actx: AudioContext, wasmUrl: string) {
+  constructor (id: number, actx: AudioContext, wasmUrl: string) {
     super(actx, 'aoecProcessor', {
       numberOfInputs: 0,
       numberOfOutputs: 1,
       outputChannelCount: [2]
     })
 
+    this.id = id
     this.wasmReady = false
-    this.control = []
-    this.control[0] = new AoecControl(this, 0)
-    this.control[1] = new AoecControl(this, 1)
-    this.control[2] = new AoecControl(this, 2)
+    this.control = new AoecControl(this)
 
     fetch(wasmUrl)
       .then(r => r.arrayBuffer())
@@ -57,12 +53,11 @@ export class AoecNode extends AudioWorkletNode {
   }
 
   private setReady () {
-    console.log('from aoecProcessor: wasm is ready')
+    console.log(`node[${this.id}]: wasmReady`)
     this.wasmReady = true
   }
 
-  getControl = (id: number) => this.control[id]
-
+  getControl = () => this.control
   isReady = () => this.wasmReady
 
 }
