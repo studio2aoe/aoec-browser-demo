@@ -15,8 +15,12 @@ export class AoecControl {
     postmsg(this.node.port, 'set_freq', [freq])
   }
 
-  setVol (ch: number, vol: number) {
-    postmsg(this.node.port, 'set_vol', [ch, vol])
+  setEnv (env: number) {
+    postmsg(this.node.port, 'set_env', [env])
+  }
+
+  setPan (pan: number) {
+    postmsg(this.node.port, 'set_pan', [pan])
   }
 
   setMute (mute: boolean) {
