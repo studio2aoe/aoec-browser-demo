@@ -33,7 +33,7 @@ const noteName = (v: number): string => {
   return `${nname}${octave}`
 }
 
-const calcFreq = (n: number, p: number) => 
+const calcFreq = (n: number, p: number) =>
   TUNINGS[n] * 2 ** (p/1200)
 
 // Exporting Component
@@ -42,7 +42,7 @@ export function TrackControl({ audioManager, targetID }: Props) {
   // States
   const [ stateWType, setWType ] = useState(0)
   const [ stateWParam, setWParam ] = useState(8)
-  const [ stateEnv, setEnv ] = useState(8)
+  const [ stateVol, setVol ] = useState(8)
   const [ statePan, setPan ] = useState(8)
   const [ stateNNum, setNNum ] = useState(NOTE_INITS[targetID])
   const [ statePBend, setPBend] = useState(0)
@@ -54,12 +54,12 @@ export function TrackControl({ audioManager, targetID }: Props) {
   // When states are changed, apply for audioManager
   useEffect(() => {
     const aoecControl = audioManager.getAoecControl(targetID)
-    aoecControl?.setFreq(calcFreq(stateNNum, statePBend))
-    aoecControl?.setEnv(stateEnv)
-    aoecControl?.setPan(statePan)
-    aoecControl?.setParam(0, stateWType)
-    aoecControl?.setParam(1, stateWParam)
-    aoecControl?.setMute(false)
+    aoecControl?.setparam(0x12, calcFreq(stateNNum, statePBend))
+    aoecControl?.setparam(0x21, stateVol)
+    aoecControl?.setparam(0x22, statePan)
+    aoecControl?.setparam(0x31, stateWType)
+    aoecControl?.setparam(0x32, stateWParam)
+    aoecControl?.setparam(0x23, 0)
   })
 
   return (
@@ -79,11 +79,11 @@ export function TrackControl({ audioManager, targetID }: Props) {
         onChange={wP => {setWParam(wP as number)}}
       />
 
-      <p>Volume: {stateEnv}</p>
+      <p>Volume: {stateVol}</p>
       <Slider
         min={0} max={15} step={1}
-        value={stateEnv}
-        onChange={v => {setEnv(v as number)}}
+        value={stateVol}
+        onChange={v => {setVol(v as number)}}
       />
 
       <p>Panning: {statePan}</p>
